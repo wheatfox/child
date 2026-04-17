@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>诊断页面</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 20px;
+      font-family: Arial, sans-serif;
+      background: #f5f5f5;
+    }
+    .diagnostic {
+      background: white;
+      padding: 20px;
+      margin: 10px 0;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    .title {
+      font-size: 20px;
+      font-weight: bold;
+      color: #333;
+      margin-bottom: 15px;
+    }
+    .item {
+      padding: 10px;
+      margin: 8px 0;
+      border-left: 4px solid #ddd;
+      background: #f9f9f9;
+    }
+    .success {
+      border-left-color: #4CAF50;
+      background: #E8F5E9;
+    }
+    .error {
+      border-left-color: #F44336;
+      background: #FFEBEE;
+      color: #C62828;
+    }
+    .warning {
+      border-left-color: #FF9800;
+      background: #FFF3E0;
+      color: #E65100;
+    }
+    .info {
+      border-left-color: #2196F3;
+      background: #E3F2FD;
+      color: #1565C0;
+    }
+    button {
+      background: #4CAF50;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      margin: 10px 5px;
+    }
+    button:hover {
+      background: #45A049;
+    }
+    pre {
+      background: #f5f5f5;
+      padding: 10px;
+      border-radius: 4px;
+      overflow-x: auto;
+      font-size: 12px;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+    }
+  </style>
+</head>
+<body>
+  <div class="diagnostic">
+    <div class="title">🔍 诊断结果</div>
+    
+    <div id="results"></div>
+    
+    <div style="margin-top: 20px;">
+      <button onclick="runDiagnostics()">重新检测</button>
+      <button onclick="testModule()">测试 ES6 模块</button>
+      <button onclick="testVue()">测试 Vue CDN</button>
+    </div>
+  </div>
+
+  <script>
+    const results = document.getElementById('results');
+    
+    function addResult(type, title, content) {
+      const div = document.createElement('div');
+      div.className = `item ${type}`;
+      div.innerHTML = `<strong>${title}</strong><br>${content}`;
+      results.appendChild(div);
+    }
+    
+    function runDiagnostics() {
+      results.innerHTML = '';
+      
+      // 1. 检查 User Agent
+      addResult('info', '📱 设备信息', navigator.userAgent);
+      
+      // 2. 检查 localStorage
+      try {
+        localStorage.setItem('test', 'test');
+        localStorage.removeItem('test');
+        addResult('success', '✅ localStorage', '可用');
+      } catch(e) {
+        addResult('error', '❌ localStorage', '不可用：' + e.message);
+      }
+      
+      // 3. 检查 sessionStorage
+      try {
+        sessionStorage.setItem('test', 'test');
+        sessionStorage.removeItem('test');
+        addResult('success', '✅ sessionStorage', '可用');
+      } catch(e) {
+        addResult('error', '❌ sessionStorage', '不可用：' + e.message);
+      }
+      
+      // 4. 检查当前 URL
+      addResult('info', '🌐 当前 URL', window.location.href);
+      
+      // 5. 检查 document 状态
+      addResult('info', '📄 Document 状态', 
+        `readyState: ${document.readyState}<br>` +
+        `URL: ${document.URL}<br>` +
+        `baseURI: ${document.baseURI}`);
+      
+      // 6. 检查是否支持 ES6
+      try {
+        eval('(() => {})');
+        addResult('success', '✅ ES6 箭头函数', '支持');
+      } catch(e) {
+        addResult('error', '❌ ES6 箭头函数', '不支持：' + e.message);
+      }
+      
+      // 7. 检查是否支持 const/let
+      try {
+        eval('{ const x = 1; let y = 2; }');
+        addResult('success', '✅ const/let', '支持');
+      } catch(e) {
+        addResult('error', '❌ const/let', '不支持：' + e.message);
+      }
+      
+      // 8. 检查是否支持 template literals
+      try {
+        eval('`template ${1+1}`');
+        addResult('success', '✅ 模板字符串', '支持');
+      } catch(e) {
+        addResult('error', '❌ 模板字符串', '不支持：' + e.message);
+      }
+      
+      // 9. 检查网络状态
+      if (navigator.onLine) {
+        addResult('success', '✅ 网络状态', '在线');
+      } else {
+        addResult('error', '❌ 网络状态', '离线');
+      }
+      
+      // 10. 尝试加载 JS 文件
+      checkScript('./assets/index-kTTFFh-p.js', '主 JS 文件');
+    }
+    
+    function checkScript(src, name) {
+      return new Promise((resolve) => {
+        const script = document.createElement('script');
+        const startTime = Date.now();
+        
+        script.onload = () => {
+          const loadTime = Date.now() - startTime;
+          addResult('success', `✅ ${name}`, `加载成功！耗时：${loadTime}ms<br>文件：${src}`);
+          resolve(true);
+        };
+        
+        script.onerror = () => {
+          addResult('error', `❌ ${name}`, `加载失败！<br>文件：${src}<br>` +
+            `请检查：<br>` +
+            `1. 文件是否存在<br>` +
+            `2. 路径是否正确<br>` +
+            `3. 服务器 MIME 类型配置`);
+          resolve(false);
+        };
+        
+        script.src = src;
+        script.type = 'module';
+        document.head.appendChild(script);
+      });
+    }
+    
+    function testModule() {
+      addResult('info', '🔧 ES6 模块测试', '正在加载测试模块...');
+      
+      const testCode = `
+        <script type="module">
+          console.log('ES6 模块测试');
+          const test = 'success';
+          console.log('测试通过:', test);
+        <\/script>
+      `;
+      
+      const div = document.createElement('div');
+      div.innerHTML = testCode;
+      document.body.appendChild(div);
+      
+      setTimeout(() => {
+        addResult('success', '✅ ES6 模块内联测试', '如果看到控制台日志，说明支持 ES6 模块');
+      }, 100);
+    }
+    
+    function testVue() {
+      window.open('cdn-version.html', '_blank');
+    }
+    
+    // 自动运行诊断
+    window.addEventListener('load', () => {
+      setTimeout(runDiagnostics, 500);
+    });
+  </script>
+</body>
+</html>

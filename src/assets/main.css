@@ -1,0 +1,143 @@
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --color-pink: #FF6B9D;
+  --color-blue: #4ECDC4;
+  --color-yellow: #FFE66D;
+  --color-green: #95E1D3;
+  --color-white: #FFFFFF;
+  --color-bg: #FFF5F7;
+  --color-text: #333333;
+  --color-text-light: #666666;
+
+  font-family: 'Comic Sans MS', 'Nunito', 'Quicksand', 'Rounded Mplus 1c', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  line-height: 1.6;
+  font-weight: 400;
+  color: var(--color-text);
+  background-color: var(--color-bg);
+
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(135deg, var(--color-bg) 0%, #F0F9FF 50%, #F0FFF4 100%);
+}
+
+#app {
+  width: 100%;
+  min-height: 100vh;
+}
+
+a {
+  color: var(--color-pink);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+a:hover {
+  color: var(--color-blue);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: var(--color-pink);
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+button {
+  cursor: pointer;
+  border-radius: 20px;
+  border: none;
+  padding: 10px 24px;
+  font-size: 16px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(255, 107, 157, 0.2);
+}
+
+button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(255, 107, 157, 0.3);
+}
+
+button:active {
+  transform: translateY(0);
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--color-pink), #FF8FB1);
+  color: white;
+}
+
+.btn-secondary {
+  background: linear-gradient(135deg, var(--color-blue), #7EDDD6);
+  color: white;
+}
+
+.btn-success {
+  background: linear-gradient(135deg, var(--color-green), #B5EBDF);
+  color: white;
+}
+
+.btn-warning {
+  background: linear-gradient(135deg, var(--color-yellow), #FFEF94);
+  color: var(--color-text);
+}
+
+input, select, textarea {
+  border: 2px solid var(--color-blue);
+  border-radius: 12px;
+  padding: 12px 16px;
+  font-size: 16px;
+  outline: none;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  font-family: inherit;
+}
+
+input:focus, select:focus, textarea:focus {
+  border-color: var(--color-pink);
+  box-shadow: 0 0 0 4px rgba(255, 107, 157, 0.1);
+}
+
+.card {
+  background: white;
+  border-radius: 20px;
+  padding: 24px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
+  border: 2px solid transparent;
+  transition: all 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.1);
+  border-color: var(--color-pink);
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.text-center {
+  text-align: center;
+}
